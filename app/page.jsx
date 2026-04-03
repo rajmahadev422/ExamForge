@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import Navbar from './_components_/Navbar'
+import Navbar from '../_components_/Navbar'
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E']
 
