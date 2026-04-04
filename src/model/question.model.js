@@ -16,7 +16,7 @@ const questionSchema = new mongoose.Schema(
     },
 
     image: {
-      type: String, // URL (Cloudinary / S3 / etc.)
+      type: String,
       default: null,
     },
 
@@ -27,25 +27,44 @@ const questionSchema = new mongoose.Schema(
     },
 
     category: {
-      type: String, // user-defined (Physics, Math, etc.)
+      type: String,
       required: true,
       trim: true,
     },
 
+    // ✅ MCQ Options
     options: [
       {
-        type: String,
+        text: String,
+        isCorrect: Boolean,
       },
     ],
 
+    // ✅ For numerical
     correctAnswer: {
       type: mongoose.Schema.Types.Mixed,
-      // string (MCQ) or number (numerical)
+    },
+
+    // 🔥 NEW FIELDS
+    marks: {
+      type: Number,
       required: true,
+      default: 4,
+      min: 0,
+    },
+
+    negativeMarks: {
+      type: Number,
+      default: 1,
+      min: 0,
+    },
+
+    explanation: {
+      type: String,
     },
   },
   { timestamps: true },
 );
 
-export default mongoose.models.Question ||
-  mongoose.model("Question", questionSchema);
+
+export default mongoose.models.Question || mongoose.model("Question", questionSchema);
