@@ -1,5 +1,5 @@
 import './globals.css'
-import { ThemeProvider } from '../_components_/ThemeProvider'
+import { ThemeProvider } from '../components/ThemeProvider'
 
 export const metadata = {
   title: 'ExamForge — Question Paper System',
