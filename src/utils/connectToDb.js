@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 let isConnected = false;
-const connectToDB= async()=> {
+export const connectToDB= async()=> {
   if (isConnected) return;
 
   try {
@@ -10,6 +10,7 @@ const connectToDB= async()=> {
     console.log("DB connected");
   } catch (error) {
     console.log("DB connection failed", error);
+  } finally {
+    return isConnected;
   }
 };
-module.exports = connectToDB
