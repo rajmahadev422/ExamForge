@@ -31,10 +31,10 @@ function QuestionCard({ q, idx, onChange, onRemove, total }) {
   }
 
   return (
-    <div className="card animate-fade-up" style={{ padding: '24px', position: 'relative' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
-        <span className="mono" style={{ fontSize: '13px', color: 'var(--text-dimmer)', minWidth: '28px' }}>Q{idx + 1}</span>
-        <div style={{ display: 'flex', gap: '8px' }}>
+    <div className="card animate-fade-up p-6 relative">
+      <div className='flex items-center gap-3 mb-5'>
+        <span className="mono font-[13px]">Q{idx + 1}</span>
+        <div className='flex gap-2'>
           <button className={`btn ${q.type === 'mcq' ? 'btn-primary' : 'btn-outline'}`} style={{ padding: '6px 14px', fontSize: '12px' }} onClick={() => onChange({ ...q, type: 'mcq', correct: null })}>MCQ</button>
           <button className={`btn ${q.type === 'numerical' ? 'btn-success' : 'btn-outline'}`} style={{ padding: '6px 14px', fontSize: '12px' }} onClick={() => onChange({ ...q, type: 'numerical', options: [], correct: null })}>Numerical</button>
         </div>
