@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    username: {
+    userName: {
       type: String,
       required: true,
       unique: true,
@@ -17,11 +17,12 @@ const userSchema = new mongoose.Schema(
       minlength: 3,
       maxlength: 20,
     },
-    fullName: {
+    name: {
       type: String,
       required: true,
       trim: true,
     },
+    image: String
   },
   { timestamps: true }
 );
