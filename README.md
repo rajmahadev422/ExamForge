@@ -1,36 +1,28 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ExamForge
 
-## Getting Started
+Welcome to the ExamForge project!
 
-First, run the development server:
+## Overview
+ExamForge is a comprehensive platform designed to facilitate the creation, management, and administration of online examinations. This project aims to streamline the examination process for educational institutions, enabling them to conduct assessments efficiently and effectively.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Features
+- **User Authentication:** Secure user login and registration system for students and educators.
+- **Exam Creation:** Tools for educators to create various types of questions including multiple-choice, true/false, and essay questions.
+- **Exam Management:** Organize exams, schedule them, and manage settings such as time limits and scoring criteria.
+- **Responsive Design:** Accessibility on various devices including computers, tablets, and smartphones.
+- **Results Tracking:** Detailed analytics and reporting for educators to track student performance.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Installation
+To install the ExamForge project, follow these steps:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/rajmahadev422/ExamForge.git
+   ```
+2. Navigate into the project directory:
+  ```bash
+  cd ExamForg
+  ```
+3. Install the required dependencies:
+  ```bash
+  npm install
+  ```
