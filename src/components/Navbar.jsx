@@ -2,11 +2,14 @@
 import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { useTheme } from './ThemeProvider'
+import { useSession } from 'next-auth/react'
 
 export default function Navbar({ title, subtitle, left, right }) {
   const { theme, toggle } = useTheme()
   const [animating, setAnimating] = useState(false)
-  const btnRef = useRef(null)
+  const btnRef = useRef(null);
+
+  const {data: session} = useSession();
 
   const handleToggle = () => {
     setAnimating(true)
@@ -63,6 +66,7 @@ export default function Navbar({ title, subtitle, left, right }) {
         >
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
+        <p>{session.user.name[0]}</p>
       </div>
     </header>
   )
