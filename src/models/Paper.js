@@ -21,11 +21,11 @@ const paperSchema = new mongoose.Schema(
       type: Number,
       required: true,
       default: 0,
-      min: 1,
     },
     subject:{
       type: [],
       required: true, 
+      default: ["Test paper"]
     },
     description: {
       type: String,

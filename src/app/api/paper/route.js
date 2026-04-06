@@ -3,20 +3,12 @@ import mongoose from "mongoose";
 import Paper from "@/models/Paper";
 import { connectToDB } from "@/utils/connectToDb";
 import { getCurrentUser } from "@/utils/auth";
-
-export async function GET(req) {
-  const user = await getCurrentUser();
-  return NextResponse.json(
-    {success:true, message:"User", data:user},
-    {status:200}
-  )
-}
 export async function POST(req) {
   try {
     await connectToDB();
 
     const body = await req.json();
-    const user = getCurrentUser();
+    const user = await getCurrentUser();
     if(!user){
       return NextResponse.json(
         {success: false, message: "Unauthorised req"}, 
@@ -30,7 +22,7 @@ export async function POST(req) {
     } = body;
 
     // 🔴 Required fields check
-    if (!title || !duration || !totalQuestions) {
+    if (!title || !duration || !description) {
       return NextResponse.json(
         { success: false, message: "All required fields must be provided" },
         { status: 400 }
@@ -49,13 +41,6 @@ export async function POST(req) {
     if (duration <= 0) {
       return NextResponse.json(
         { success: false, message: "Duration must be greater than 0" },
-        { status: 400 }
-      );
-    }
-
-    if (totalQuestions <= 0) {
-      return NextResponse.json(
-        { success: false, message: "Total questions must be at least 1" },
         { status: 400 }
       );
     }
