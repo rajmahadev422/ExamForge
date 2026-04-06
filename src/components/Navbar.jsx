@@ -66,7 +66,7 @@ export default function Navbar({ title, subtitle, left, right }) {
         >
           {theme === 'dark' ? '☀️' : '🌙'}
         </button>
-        <p>{session.user.name[0]}</p>
+        <p>{session ? session.user.name[0] : (<a href='/login'>Login</a>)}</p>
       </div>
     </header>
   )
