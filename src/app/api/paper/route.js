@@ -19,8 +19,10 @@ export async function POST(req) {
       title,
       duration,
       description,
+      subjects,
     } = body;
 
+    console.log("Received paper data:", body);
     // 🔴 Required fields check
     if (!title || !duration || !description) {
       return NextResponse.json(
@@ -48,9 +50,7 @@ export async function POST(req) {
     // ✅ Create paper
     const paper = await Paper.create({
       userId: user._id,
-      title,
-      duration,
-      description,
+      ...body,
     });
 
     return NextResponse.json(

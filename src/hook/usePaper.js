@@ -33,7 +33,8 @@ export const useCreatePaper = create((set) => ({
       }
 
       toast.success(data.message || "Paper created successfully");
-      e.target.reset();
+      console.log("Paper created:", data.data);
+      // e.target.reset();
       return data;
 
     } catch (err) {
