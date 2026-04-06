@@ -2,7 +2,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Providers from "@/components/Providers";
 import Navbar from "@/components/Navbar";
-import Link from "next/link";
+import { Toaster } from "react-hot-toast";
 
 export const metadata = {
   title: "ExamForge — Question Paper System",
@@ -33,6 +33,7 @@ export default function RootLayout({ children }) {
           <ThemeProvider>
             <Navbar />
             {children}
+            <Toaster position="top-right" />
           </ThemeProvider>
         </Providers>
       </body>

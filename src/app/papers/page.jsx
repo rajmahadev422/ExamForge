@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import React, { useState } from "react";
 
 export default function QuestionPapersPage() {
@@ -105,7 +106,6 @@ export default function QuestionPapersPage() {
 
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
-
       {/* Statistics Cards */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {/* Question Papers Grid */}
@@ -186,9 +186,12 @@ export default function QuestionPapersPage() {
             </p>
           </div>
         )}
-{/* create paper button */}
+        {/* create paper button */}
         <div className="fixed bottom-6 right-6">
-          <button className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors">
+          <Link
+            href={"/"}
+            className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
+          >
             <svg
               className="h-5 w-5 mr-2"
               fill="none"
@@ -203,7 +206,7 @@ export default function QuestionPapersPage() {
               />
             </svg>
             {/* Create Question Paper */}
-          </button>
+          </Link>
         </div>
       </div>
 
