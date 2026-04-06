@@ -2,24 +2,35 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import Paper from "@/models/Paper";
 import { connectToDB } from "@/utils/connectToDb";
+import { getCurrentUser } from "@/utils/auth";
 
-
+export async function GET(req) {
+  const user = await getCurrentUser();
+  return NextResponse.json(
+    {success:true, message:"User", data:user},
+    {status:200}
+  )
+}
 export async function POST(req) {
   try {
     await connectToDB();
 
     const body = await req.json();
-
+    const user = getCurrentUser();
+    if(!user){
+      return NextResponse.json(
+        {success: false, message: "Unauthorised req"}, 
+        {status: 401}
+      )
+    } 
     const {
-      userId,
       title,
       duration,
-      totalQuestions,
       description,
     } = body;
 
     // 🔴 Required fields check
-    if (!userId || !title || !duration || !totalQuestions) {
+    if (!title || !duration || !totalQuestions) {
       return NextResponse.json(
         { success: false, message: "All required fields must be provided" },
         { status: 400 }
@@ -27,7 +38,7 @@ export async function POST(req) {
     }
 
     // 🔴 Validate ObjectId
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
+    if (!mongoose.Types.ObjectId.isValid(user._id)) {
       return NextResponse.json(
         { success: false, message: "Invalid userId" },
         { status: 400 }
@@ -51,10 +62,9 @@ export async function POST(req) {
 
     // ✅ Create paper
     const paper = await Paper.create({
-      userId,
+      userId: user._id,
       title,
       duration,
-      totalQuestions,
       description,
     });
 
