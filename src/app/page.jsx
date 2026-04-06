@@ -1,579 +1,292 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
 import Link from "next/link";
-import Navbar from "../components/Navbar";
 
-const LETTERS = ["A", "B", "C", "D", "E"];
-
-function newQuestion() {
-  return {
-    id: Math.random().toString(36).slice(2),
-    type: "mcq",
-    question: "",
-    options: ["", "", "", ""],
-    correct: null,
-    marks: 4,
-    negativeMarks: 1,
-  };
-}
-
-function QuestionCard({ q, idx, onChange, onRemove, total }) {
-  const updateOption = (i, val) => {
-    const opts = [...q.options];
-    opts[i] = val;
-    onChange({ ...q, options: opts });
-  };
-  const addOption = () => onChange({ ...q, options: [...q.options, ""] });
-  const removeOption = (i) => {
-    const opts = q.options.filter((_, j) => j !== i);
-    onChange({
-      ...q,
-      options: opts,
-      correct:
-        q.correct === i ? null : q.correct > i ? q.correct - 1 : q.correct,
-    });
-  };
-
+export default function HomePage() {
   return (
-    <div className="card animate-fade-up p-6 relative">
-      <div className="flex items-center gap-3 mb-5">
-        <span className="mono font-[13px]">Q{idx + 1}</span>
-        <div className="flex gap-2">
-          <button
-            className={`btn ${q.type === "mcq" ? "btn-primary" : "btn-outline"}`}
-            style={{ padding: "6px 14px", fontSize: "12px" }}
-            onClick={() => onChange({ ...q, type: "mcq", correct: null })}
-          >
-            MCQ
-          </button>
-          <button
-            className={`btn ${q.type === "numerical" ? "btn-success" : "btn-outline"}`}
-            style={{ padding: "6px 14px", fontSize: "12px" }}
-            onClick={() =>
-              onChange({ ...q, type: "numerical", options: [], correct: null })
-            }
-          >
-            Numerical
-          </button>
-        </div>
-        <div
-          style={{
-            marginLeft: "auto",
-            display: "flex",
-            gap: "8px",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <span
-              className="label"
-              style={{ fontSize: "10px", marginBottom: "3px" }}
-            >
-              +Marks
-            </span>
-            <input
-              className="input mono"
-              type="number"
-              value={q.marks}
-              onChange={(e) => onChange({ ...q, marks: +e.target.value })}
-              style={{ width: "64px", padding: "6px 10px", fontSize: "13px" }}
-            />
-          </div>
-          <div>
-            <span
-              className="label"
-              style={{ fontSize: "10px", marginBottom: "3px" }}
-            >
-              −Marks
-            </span>
-            <input
-              className="input mono"
-              type="number"
-              value={q.negativeMarks}
-              onChange={(e) =>
-                onChange({ ...q, negativeMarks: +e.target.value })
-              }
-              style={{ width: "64px", padding: "6px 10px", fontSize: "13px" }}
-            />
-          </div>
-          {total > 1 && (
-            <button
-              className="btn btn-danger"
-              style={{
-                padding: "6px 12px",
-                fontSize: "12px",
-                marginTop: "18px",
-              }}
-              onClick={onRemove}
-            >
-              ✕
-            </button>
-          )}
-        </div>
-      </div>
-
-      <div style={{ marginBottom: "16px" }}>
-        <label className="label">Question</label>
-        <textarea
-          className="input"
-          rows={3}
-          placeholder="Enter your question here..."
-          value={q.question}
-          onChange={(e) => onChange({ ...q, question: e.target.value })}
-          style={{ resize: "vertical", lineHeight: "1.5" }}
-        />
-      </div>
-
-      {q.type === "mcq" && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          <label className="label">
-            Options{" "}
-            <span
-              style={{
-                color: "var(--text-dimmer)",
-                textTransform: "none",
-                fontSize: "11px",
-                fontWeight: 400,
-              }}
-            >
-              — click letter to mark correct
-            </span>
-          </label>
-          {q.options.map((opt, i) => (
-            <div
-              key={i}
-              style={{ display: "flex", alignItems: "center", gap: "10px" }}
-            >
-              <button
-                onClick={() =>
-                  onChange({ ...q, correct: q.correct === i ? null : i })
-                }
-                style={{
-                  width: "30px",
-                  height: "30px",
-                  borderRadius: "50%",
-                  flexShrink: 0,
-                  background: q.correct === i ? "var(--accent3)" : "var(--bg3)",
-                  border: `1px solid ${q.correct === i ? "var(--accent3)" : "var(--border)"}`,
-                  color: q.correct === i ? "#fff" : "var(--text-dim)",
-                  fontFamily: "Space Mono,monospace",
-                  fontSize: "12px",
-                  fontWeight: "700",
-                  cursor: "pointer",
-                  transition: "all 0.15s",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {LETTERS[i]}
-              </button>
-              <input
-                className="input"
-                placeholder={`Option ${LETTERS[i]}`}
-                value={opt}
-                onChange={(e) => updateOption(i, e.target.value)}
-              />
-              {q.options.length > 2 && (
-                <button
-                  onClick={() => removeOption(i)}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "var(--text-dimmer)",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                    padding: "4px",
-                    flexShrink: 0,
-                  }}
-                >
-                  ×
-                </button>
-              )}
-            </div>
-          ))}
-          {q.options.length < 5 && (
-            <button
-              className="btn btn-ghost"
-              style={{ alignSelf: "flex-start", fontSize: "13px" }}
-              onClick={addOption}
-            >
-              + Add Option
-            </button>
-          )}
-        </div>
-      )}
-
-      {q.type === "numerical" && (
-        <div>
-          <label className="label">Correct Answer</label>
-          <input
-            className="input mono"
-            type="number"
-            placeholder="Enter the numerical answer"
-            value={q.correct ?? ""}
-            onChange={(e) =>
-              onChange({
-                ...q,
-                correct: e.target.value === "" ? null : +e.target.value,
-              })
-            }
-            style={{ maxWidth: "200px" }}
-          />
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default function CreatePage() {
-  const router = useRouter();
-  const [title, setTitle] = useState("");
-  const [subject, setSubject] = useState("");
-  const [password, setPassword] = useState("");
-  const [timeMinutes, setTimeMinutes] = useState(180);
-  const [questions, setQuestions] = useState([newQuestion()]);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  const [showPapers, setShowPapers] = useState(false);
-
-  const updateQ = (idx, q) =>
-    setQuestions((qs) => qs.map((x, i) => (i === idx ? q : x)));
-  const removeQ = (idx) => setQuestions((qs) => qs.filter((_, i) => i !== idx));
-  const addQ = () => setQuestions((qs) => [...qs, newQuestion()]);
-
-  const validate = () => {
-    if (!title.trim()) return "Title is required";
-    if (!password.trim()) return "Password is required";
-    if (timeMinutes < 1) return "Time must be at least 1 minute";
-    for (let i = 0; i < questions.length; i++) {
-      const q = questions[i];
-      if (!q.question.trim()) return `Question ${i + 1} text is empty`;
-      if (q.type === "mcq") {
-        if (q.options.some((o) => !o.trim()))
-          return `Question ${i + 1} has empty options`;
-        if (q.correct === null)
-          return `Question ${i + 1} has no correct answer selected`;
-      }
-      if (q.type === "numerical" && q.correct === null)
-        return `Question ${i + 1} has no numerical answer`;
-    }
-    return null;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const err = validate();
-    if (err) {
-      setError(err);
-      return;
-    }
-    setError("");
-    setSaving(true);
-    const paper = {
-      id: Math.random().toString(36).slice(2, 10),
-      title: title.trim(),
-      subject: subject.trim(),
-      password,
-      timeMinutes: +timeMinutes,
-      questions,
-      createdAt: Date.now(),
-    };
-    const papers = JSON.parse(localStorage.getItem("examforge_papers") || "[]");
-    papers.push(paper);
-    localStorage.setItem("examforge_papers", JSON.stringify(papers));
-    setTimeout(() => router.push(`/paper/${paper.id}`), 300);
-  };
-
-  const getSavedPapers = () =>
-    JSON.parse(localStorage.getItem("examforge_papers") || "[]");
-
-  const mcqCount = questions.filter((q) => q.type === "mcq").length;
-  const numCount = questions.filter((q) => q.type === "numerical").length;
-  const totalMarks = questions.reduce((s, q) => s + q.marks, 0);
-
-  return (
-    <div style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
-
-      {/* Saved papers drawer */}
-      {showPapers && (
-        <div
-          className="animate-fade-in"
-          style={{
-            position: "fixed",
-            top: "68px",
-            right: "80px",
-            width: "300px",
-            background: "var(--bg2)",
-            border: "1px solid var(--border-bright)",
-            borderRadius: "12px",
-            padding: "16px",
-            zIndex: 200,
-            boxShadow: "var(--shadow)",
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "12px",
-            }}
-          >
-            <span style={{ fontWeight: "700", fontSize: "14px" }}>
-              Saved Papers
-            </span>
-            <button
-              onClick={() => setShowPapers(false)}
-              style={{
-                background: "none",
-                border: "none",
-                color: "var(--text-dim)",
-                cursor: "pointer",
-                fontSize: "18px",
-              }}
-            >
-              ×
-            </button>
-          </div>
-          {getSavedPapers().length === 0 ? (
-            <p style={{ color: "var(--text-dim)", fontSize: "13px" }}>
-              No papers yet.
+    <div className="min-h-screen bg-linear-to-br from-gray-50 via-white to-gray-100">
+      {/* Hero Section */}
+      <div className="relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+          <div className="text-center">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 tracking-tight">
+              Welcome to{" "}
+              <span className="text-indigo-600">Question Paper Hub</span>
+            </h1>
+            <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-500">
+              Create, manage, and organize your question papers efficiently.
+              Streamline your examination process with our powerful platform.
             </p>
-          ) : (
-            getSavedPapers().map((p) => (
-              <div
-                key={p.id}
-                style={{
-                  padding: "10px",
-                  borderRadius: "8px",
-                  background: "var(--bg3)",
-                  marginBottom: "8px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
+            <div className="mt-10 flex justify-center gap-4">
+              <Link
+                href="/papers"
+                className="px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-lg hover:shadow-xl"
               >
-                <div>
-                  <div style={{ fontWeight: "600", fontSize: "13px" }}>
-                    {p.title}
-                  </div>
-                  <div style={{ color: "var(--text-dim)", fontSize: "12px" }}>
-                    {p.questions.length} Qs · {p.timeMinutes}min
-                  </div>
-                </div>
-                <Link
-                  href={`/paper/${p.id}`}
-                  style={{ textDecoration: "none" }}
-                >
-                  <button
-                    className="btn btn-outline"
-                    style={{ padding: "4px 10px", fontSize: "11px" }}
-                  >
-                    View
-                  </button>
-                </Link>
-              </div>
-            ))
-          )}
-        </div>
-      )}
-
-      <div
-        style={{ maxWidth: "860px", margin: "0 auto", padding: "40px 24px" }}
-      >
-        <div className="animate-fade-up" style={{ marginBottom: "40px" }}>
-          <h1
-            style={{
-              fontSize: "42px",
-              fontWeight: "800",
-              letterSpacing: "-0.02em",
-              marginBottom: "8px",
-              lineHeight: 1.1,
-            }}
-          >
-            Create Question
-            <br />
-            <span style={{ color: "var(--accent)" }}>Paper</span>
-          </h1>
-          <p style={{ color: "var(--text-dim)", fontSize: "16px" }}>
-            Build a complete exam with MCQ and numerical questions.
-          </p>
+                Explore Question Papers
+              </Link>
+              <Link
+                href="/create"
+                className="px-6 py-3 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+              >
+                Create New Paper
+              </Link>
+            </div>
+          </div>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "24px" }}
-        >
-          <div className="card animate-fade-up" style={{ padding: "24px" }}>
-            <h2
-              style={{
-                fontWeight: "700",
-                fontSize: "12px",
-                textTransform: "uppercase",
-                letterSpacing: "0.08em",
-                color: "var(--text-dim)",
-                marginBottom: "20px",
-              }}
-            >
-              Paper Details
-            </h2>
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "16px",
-                marginBottom: "16px",
-              }}
-            >
-              <div>
-                <label className="label">Title *</label>
-                <input
-                  className="input"
-                  placeholder="JEE Main 2024 — Paper 1"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="label">Subject</label>
-                <input
-                  className="input"
-                  placeholder="Physics, Chemistry, Math"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="label">Password *</label>
-                <input
-                  className="input"
-                  type="password"
-                  placeholder="Set exam password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div>
-                <label className="label">Duration (minutes) *</label>
-                <input
-                  className="input mono"
-                  type="number"
-                  min={1}
-                  value={timeMinutes}
-                  onChange={(e) => setTimeMinutes(e.target.value)}
-                />
-              </div>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                gap: "16px",
-                paddingTop: "16px",
-                borderTop: "1px solid var(--border)",
-              }}
-            >
-              {[
-                {
-                  label: "Questions",
-                  value: questions.length,
-                  color: "var(--text)",
-                },
-                { label: "MCQ", value: mcqCount, color: "var(--accent)" },
-                {
-                  label: "Numerical",
-                  value: numCount,
-                  color: "var(--accent3)",
-                },
-                {
-                  label: "Total Marks",
-                  value: totalMarks,
-                  color: "var(--accent4)",
-                },
-              ].map((s) => (
-                <div key={s.label} style={{ flex: 1, textAlign: "center" }}>
-                  <div
-                    className="mono"
-                    style={{
-                      fontSize: "22px",
-                      fontWeight: "700",
-                      color: s.color,
-                    }}
-                  >
-                    {s.value}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "11px",
-                      color: "var(--text-dimmer)",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.08em",
-                    }}
-                  >
-                    {s.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "16px" }}
-          >
-            {questions.map((q, i) => (
-              <QuestionCard
-                key={q.id}
-                q={q}
-                idx={i}
-                total={questions.length}
-                onChange={(nq) => updateQ(i, nq)}
-                onRemove={() => removeQ(i)}
-              />
-            ))}
-          </div>
-
-          <button
-            type="button"
-            className="btn btn-outline"
-            onClick={addQ}
-            style={{
-              alignSelf: "flex-start",
-              fontSize: "14px",
-              padding: "12px 24px",
-            }}
-          >
-            + Add Question
-          </button>
-
-          {error && (
-            <div
-              style={{
-                padding: "12px 16px",
-                borderRadius: "8px",
-                background: "rgba(255,107,107,0.08)",
-                border: "1px solid rgba(255,107,107,0.3)",
-                color: "var(--accent2)",
-                fontSize: "14px",
-              }}
-            >
-              ⚠ {error}
-            </div>
-          )}
-
-          <div style={{ display: "flex", gap: "12px", paddingTop: "8px" }}>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={saving}
-              style={{ padding: "14px 32px", fontSize: "15px" }}
-            >
-              {saving ? "⏳ Saving..." : "✓ Save Question Paper"}
-            </button>
-          </div>
-        </form>
+        {/* Decorative background */}
+        <div className="absolute inset-0 -z-10">
+          <div className="absolute inset-y-0 right-0 w-1/2 bg-linear-to-l from-indigo-50 via-transparent to-transparent"></div>
+        </div>
       </div>
+
+      {/* Features Section */}
+      <div className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+              Powerful Features for Educators
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              Everything you need to create and manage question papers in one
+              place
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="text-center p-6">
+              <div className="inline-flex items-center justify-center p-3 bg-indigo-100 rounded-xl mb-4">
+                <svg
+                  className="h-8 w-8 text-indigo-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Easy Creation
+              </h3>
+              <p className="text-gray-600">
+                Create question papers quickly with our intuitive interface and
+                templates
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="text-center p-6">
+              <div className="inline-flex items-center justify-center p-3 bg-indigo-100 rounded-xl mb-4">
+                <svg
+                  className="h-8 w-8 text-indigo-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Analytics & Insights
+              </h3>
+              <p className="text-gray-600">
+                Track performance metrics and gain valuable insights from your
+                assessments
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="text-center p-6">
+              <div className="inline-flex items-center justify-center p-3 bg-indigo-100 rounded-xl mb-4">
+                <svg
+                  className="h-8 w-8 text-indigo-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                Secure & Reliable
+              </h3>
+              <p className="text-gray-600">
+                Your data is safe with enterprise-grade security and regular
+                backups
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats Section */}
+      <div className="bg-indigo-600 py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="text-center">
+              <div className="text-4xl font-bold text-white">500+</div>
+              <div className="mt-2 text-indigo-100">Question Papers</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-white">10k+</div>
+              <div className="mt-2 text-indigo-100">Active Users</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-white">50+</div>
+              <div className="mt-2 text-indigo-100">Subjects</div>
+            </div>
+            <div className="text-center">
+              <div className="text-4xl font-bold text-white">98%</div>
+              <div className="mt-2 text-indigo-100">Satisfaction Rate</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* CTA Section */}
+      <div className="bg-white py-16">
+        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">
+            Ready to get started?
+          </h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Join thousands of educators who are already using our platform
+          </p>
+          <div className="mt-8">
+            <Link
+              href="/login"
+              className="inline-flex items-center px-6 py-3 bg-indigo-600 text-white font-medium rounded-lg hover:bg-indigo-700 transition-colors shadow-lg"
+            >
+              Create Free Account
+              <svg
+                className="ml-2 h-5 w-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 7l5 5m0 0l-5 5m5-5H6"
+                />
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center mb-4">
+                <div className="h-8 w-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+                  <svg
+                    className="h-5 w-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                    />
+                  </svg>
+                </div>
+                <span className="ml-2 text-xl font-bold">QPHub</span>
+              </div>
+              <p className="text-gray-400 text-sm">
+                Empowering educators with modern question paper management
+                tools.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Product</h3>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li>
+                  <Link href="/features" className="hover:text-white">
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/pricing" className="hover:text-white">
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/demo" className="hover:text-white">
+                    Demo
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Company</h3>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li>
+                  <Link href="/about" className="hover:text-white">
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/blog" className="hover:text-white">
+                    Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/careers" className="hover:text-white">
+                    Careers
+                  </Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Support</h3>
+              <ul className="space-y-2 text-gray-400 text-sm">
+                <li>
+                  <Link href="/help" className="hover:text-white">
+                    Help Center
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="hover:text-white">
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privacy" className="hover:text-white">
+                    Privacy Policy
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+            <p>&copy; 2024 Question Paper Hub. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
