@@ -5,21 +5,15 @@ export const useCreatePaper = create((set) => ({
   loading: false,
   errors: null,
   eid: null,
-  // update single field
-  updateField: (key, value) =>
-    set((state) => ({
-      formData: {
-        ...state.formData,
-        [key]: value,
-      },
-    })),
 
   // send data to backend
   createPaper: async (e) => {
     set({ loading: true, error: null });
     e.preventDefault();
     const formData = new FormData(e.target);
-    const paperData = Object.fromEntries(formData.entries());
+    let paperData = Object.fromEntries(formData.entries());
+    const subjects = paperData.subjects.split(",").map((s) => s.trim());
+    paperData = { ...paperData, subjects };
    
     try {
       const res = await fetch("/api/paper", {
@@ -33,16 +27,17 @@ export const useCreatePaper = create((set) => ({
 
       const data = await res.json();
 
-      if (!res.ok) {
+      if (!res.ok || !data.success) {
         toast.error(data.message || "Error submitting paper");
         throw new Error(data.message || "Error submitting paper");
       }
 
-      set({ loading: false });
-      toast.success("Paper created successfully!");
+      toast.success(data.message || "Paper created successfully");
+      e.target.reset();
       return data;
 
     } catch (err) {
+      toast.error(err.message || "Error submitting paper");
       set({ error: err.message, loading: false });
 
     } finally {

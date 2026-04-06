@@ -91,19 +91,6 @@ export default function QuestionPapersPage() {
     });
   };
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Published":
-        return "bg-green-100 text-green-800";
-      case "Draft":
-        return "bg-yellow-100 text-yellow-800";
-      case "Archived":
-        return "bg-gray-100 text-gray-800";
-      default:
-        return "bg-blue-100 text-blue-800";
-    }
-  };
-
   return (
     <div className="min-h-screen bg-linear-to-br from-gray-50 to-gray-100">
       {/* Statistics Cards */}
@@ -189,7 +176,7 @@ export default function QuestionPapersPage() {
         {/* create paper button */}
         <div className="fixed bottom-6 right-6">
           <Link
-            href={"/"}
+            href={"papers/create"}
             className="inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors"
           >
             <svg

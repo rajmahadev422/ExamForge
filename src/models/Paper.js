@@ -22,7 +22,7 @@ const paperSchema = new mongoose.Schema(
       required: true,
       default: 0,
     },
-    subject:{
+    subjects:{
       type: [],
       required: true, 
       default: ["Test paper"]
