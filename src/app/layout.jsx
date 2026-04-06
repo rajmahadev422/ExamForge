@@ -1,6 +1,8 @@
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Providers from "@/components/Providers";
+import Navbar from "@/components/Navbar";
+import Link from "next/link";
 
 export const metadata = {
   title: "ExamForge — Question Paper System",
@@ -29,6 +31,7 @@ export default function RootLayout({ children }) {
       <body style={{ position: "relative", zIndex: 1 }}>
         <Providers>
           <ThemeProvider>
+            <Navbar />
             {children}
           </ThemeProvider>
         </Providers>

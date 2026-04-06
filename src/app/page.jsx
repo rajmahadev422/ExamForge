@@ -296,17 +296,6 @@ export default function CreatePage() {
 
   return (
     <div style={{ minHeight: "100vh", position: "relative", zIndex: 1 }}>
-      <Navbar
-        right={
-          <button
-            className="btn btn-outline"
-            style={{ fontSize: "13px" }}
-            onClick={() => setShowPapers(!showPapers)}
-          >
-            📋 My Papers
-          </button>
-        }
-      />
 
       {/* Saved papers drawer */}
       {showPapers && (
