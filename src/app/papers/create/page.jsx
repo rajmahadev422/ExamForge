@@ -3,7 +3,7 @@
 import { useCreatePaper } from "@/hook/usePaper";
 
 export default function QuestionPaperForm() {
-  const { createPaper, errors } = useCreatePaper();
+  const { createPaper, errors, loading } = useCreatePaper();
 
   return (
     <div className="min-h-screen bg-(--bg) flex items-center justify-center px-4 py-10">
@@ -48,12 +48,24 @@ export default function QuestionPaperForm() {
               />
             </div>
 
+            {/*  Subjects */}
+            <div>
+              <label className="block text-sm text-(--text-dim) mb-2">
+                Subjects (comma separated) <span className="text-(--accent2)">*</span>
+              </label>
+              <input
+                type="text"
+                name="subjects"
+                className="w-full px-4 py-2 rounded-lg bg-(--bg3) border border-(--border) text-(--text) placeholder-(--text-dimmer) focus:outline-none focus:border-(--accent) focus:ring-2 focus:ring-(--accent)/20 transition"
+                placeholder="Mathematics, Physics, Chemistry"
+              />
+            </div>
+
             {/* Duration */}
             <div className="grid  gap-6">
               <div>
                 <label className="block text-sm text-(--text-dim) mb-2">
-                  Duration (minutes){" "}
-                  <span className="text-(--accent2)">*</span>
+                  Duration (minutes) <span className="text-(--accent2)">*</span>
                 </label>
                 <input
                   type="number"
@@ -80,12 +92,13 @@ export default function QuestionPaperForm() {
             {/* Button */}
             <button
               type="submit"
+              disabled={loading}
               className="w-full py-2.5 rounded-lg font-medium text-white 
               bg-(--accent) hover:opacity-90 
               transition-all duration-200 
               shadow-lg hover:shadow-xl active:scale-[0.98]"
             >
-              Create Paper
+              {loading ? "Loading..." : "Create Paper"}
             </button>
           </form>
         </div>

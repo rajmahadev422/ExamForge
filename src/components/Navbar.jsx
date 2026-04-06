@@ -90,7 +90,7 @@ export default function Navbar({ title, subtitle, left, right }) {
       {/* Right */}
       <div style={{ display: "flex", alignItems: "center", gap: "10px", position: "relative" }}>
         {right}
-        <Link href={'/paper'}> Papers </Link>
+        <Link href={'/papers'}> Papers </Link>
         {/* Theme Toggle */}
         <button
           ref={btnRef}
